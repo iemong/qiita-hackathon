@@ -1,4 +1,5 @@
-import LikeList from "@/components/LikeList";
+
+import { LikeList } from "@/components/LikeList";
 import { Inter } from "next/font/google";
 
 const inter = Inter({ subsets: ["latin"] });
