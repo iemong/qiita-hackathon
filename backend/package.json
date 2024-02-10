@@ -4,10 +4,14 @@
     "deploy": "wrangler deploy --minify src/index.ts"
   },
   "dependencies": {
-    "hono": "^3.7.2"
+    "drizzle-orm": "^0.29.3",
+    "drizzle-zod": "^0.5.1",
+    "hono": "4.0.0"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20230914.0",
+    "drizzle-kit": "^0.20.14",
+    "prettier": "3.2.5",
     "wrangler": "^3.9.0"
   }
 }
