@@ -3,14 +3,15 @@ import { insertReactionSchema, reactions } from "../../schema";
 import { drizzle } from "drizzle-orm/d1";
 import { eq } from "drizzle-orm";
 
-const selectReactions = (c: any) => {
+const selectReactions = async (c: any) => {
   const db = drizzle(c.env.DB);
-  return db.select().from(reactions).all();
+  const result = await db.select().from(reactions).all();
+  return c.json(result);
 };
 
 const insertReaction = (
   c: any,
-  request: z.infer<typeof insertReactionSchema>,
+  request: Pick<z.infer<typeof insertReactionSchema>, "type">,
 ) => {
   const db = drizzle(c.env.DB);
   const { type } = request;
