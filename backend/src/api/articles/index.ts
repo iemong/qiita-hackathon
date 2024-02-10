@@ -56,4 +56,30 @@ articlesRoute.get("/", async (c) => {
   return c.json({ data: result });
 });
 
+articlesRoute.get("/detail", async (c) => {
+  const query = c.req.query("url");
+  const db = drizzle(c.env.DB);
+  if (!query) {
+    return c.json({ data: null });
+  }
+  const url = await urlsService.findUrl(db, query);
+
+  const reaction = await reactionsService.findReaction(db, "heart");
+
+  if (!url || !reaction) {
+    return c.json({ data: null });
+  }
+
+  const urlReactions = await urlReactionsService.findUrlReaction(db, {
+    urlId: url.id,
+    reactionId: reaction.id,
+  });
+
+  if (!urlReactions) {
+    return c.json({ data: null });
+  }
+
+  return c.json({ data: { count: urlReactions.count } });
+});
+
 export { articlesRoute };
