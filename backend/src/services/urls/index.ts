@@ -1,12 +1,12 @@
-import { DrizzleD1Database, drizzle } from "drizzle-orm/d1";
+import { DrizzleD1Database } from "drizzle-orm/d1";
 import { urls } from "../../schema";
-import { eq } from "drizzle-orm";
-import { SQLiteTransaction } from "drizzle-orm/sqlite-core";
+import { eq, inArray } from "drizzle-orm";
 
-type DB = DrizzleD1Database | SQLiteTransaction<any, any, any, any>;
+type DB = DrizzleD1Database;
 
-const selectUrls = (db: DB) => {
-  return db.select().from(urls).all();
+const selectUrls = (db: DB, array?: number[]) => {
+  if (array === undefined) return db.select().from(urls).all();
+  return db.select().from(urls).where(inArray(urls.id, array)).all();
 };
 
 const findUrl = (db: DB, url: string) => {

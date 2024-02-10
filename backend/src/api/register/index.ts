@@ -9,10 +9,6 @@ import { drizzle } from "drizzle-orm/d1";
 
 const registerRoute = new Hono<{ Bindings: Bindings }>();
 
-type Request = {
-  url: string;
-  reaction: string;
-};
 registerRoute.post("/", async (c) => {
   const data: { message: string; reaction: string } = await c.req.json();
   const { message: url, reaction } = data;
@@ -45,9 +41,6 @@ registerRoute.post("/", async (c) => {
 });
 
 registerRoute.get("/", async (c) => {
-  console.log(await c.req.json());
-  // const reactions = await reactionsService.selectReactions(c);
-  // return c.json({ reactions });
   return await c.req.json();
 });
 

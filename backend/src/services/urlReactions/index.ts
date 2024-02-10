@@ -1,12 +1,18 @@
 import { DrizzleD1Database } from "drizzle-orm/d1";
 import { urlReactions } from "../../schema";
-import { and, eq, sql } from "drizzle-orm";
-import { SQLiteTransaction } from "drizzle-orm/sqlite-core/index";
+import { and, eq, inArray, sql } from "drizzle-orm";
 
-type DB = DrizzleD1Database | SQLiteTransaction<any, any, any, any>;
+type DB = DrizzleD1Database;
 
-const selectUrlReactions = async (db: DB) => {
-  return db.select().from(urlReactions).all();
+const selectUrlReactions = async (db: DB, array?: number[]) => {
+  if (array === undefined) {
+    return db.select().from(urlReactions).all();
+  }
+  return db
+    .select()
+    .from(urlReactions)
+    .where(inArray(urlReactions.urlId, array))
+    .all();
 };
 
 const findUrlReaction = async (

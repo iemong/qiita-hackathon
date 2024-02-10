@@ -1,12 +1,12 @@
 import { reactions } from "../../schema";
 import { DrizzleD1Database } from "drizzle-orm/d1";
-import { eq } from "drizzle-orm";
-import { SQLiteTransaction } from "drizzle-orm/sqlite-core";
+import { eq, inArray } from "drizzle-orm";
 
-type DB = DrizzleD1Database | SQLiteTransaction<any, any, any, any>;
+type DB = DrizzleD1Database;
 
-const selectReactions = async (db: DB) => {
-  return db.select().from(reactions).all();
+const selectReactions = async (db: DB, array?: number[]) => {
+  if (array === undefined) return db.select().from(reactions).all();
+  return db.select().from(reactions).where(inArray(reactions.id, array)).all();
 };
 
 const findReaction = async (db: DB, reaction: string) => {
