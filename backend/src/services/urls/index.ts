@@ -1,13 +1,19 @@
-import { drizzle } from "drizzle-orm/d1";
+import { DrizzleD1Database, drizzle } from "drizzle-orm/d1";
 import { urls } from "../../schema";
+import { eq } from "drizzle-orm";
+import { SQLiteTransaction } from "drizzle-orm/sqlite-core";
 
-const selectUrls = (c: any) => {
-  const db = drizzle(c.env.DB);
+type DB = DrizzleD1Database | SQLiteTransaction<any, any, any, any>;
+
+const selectUrls = (db: DB) => {
   return db.select().from(urls).all();
 };
 
-const insertUrl = (c: any, url: string) => {
-  const db = drizzle(c.env.DB);
+const findUrl = (db: DB, url: string) => {
+  return db.select().from(urls).where(eq(urls.url, url)).limit(1).get();
+};
+
+const insertUrl = (db: DB, url: string) => {
   return db
     .insert(urls)
     .values({
@@ -15,10 +21,12 @@ const insertUrl = (c: any, url: string) => {
       createdAt: new Date(),
       updatedAt: new Date(),
     })
-    .execute();
+    .returning()
+    .get();
 };
 
 export const urlsService = {
   selectUrls,
   insertUrl,
+  findUrl,
 };

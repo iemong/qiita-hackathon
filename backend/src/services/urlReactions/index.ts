@@ -1,20 +1,20 @@
-import { drizzle } from "drizzle-orm/d1";
+import { DrizzleD1Database } from "drizzle-orm/d1";
 import { urlReactions } from "../../schema";
 import { and, eq, sql } from "drizzle-orm";
+import { SQLiteTransaction } from "drizzle-orm/sqlite-core/index";
 
-const selectUrlReactions = async (c: any) => {
-  const db = drizzle(c.env.DB);
-  const result = await db.select().from(urlReactions).all();
-  return c.json(result);
+type DB = DrizzleD1Database | SQLiteTransaction<any, any, any, any>;
+
+const selectUrlReactions = async (db: DB) => {
+  return db.select().from(urlReactions).all();
 };
 
 const findUrlReaction = async (
-  c: any,
+  db: DB,
   request: { urlId: number; reactionId: number },
 ) => {
-  const db = drizzle(c.env.DB);
   const { urlId, reactionId } = request;
-  const result = await db
+  return db
     .select()
     .from(urlReactions)
     .where(
@@ -23,18 +23,16 @@ const findUrlReaction = async (
         eq(urlReactions.reactionId, reactionId),
       ),
     )
-    .all();
-  return c.json(result[0]);
+    .get();
 };
 
 const insertUrlReaction = (
-  c: any,
+  db: DB,
   request: {
     urlId: number;
     reactionId: number;
   },
 ) => {
-  const db = drizzle(c.env.DB);
   const { urlId, reactionId } = request;
   return db
     .insert(urlReactions)
@@ -49,13 +47,12 @@ const insertUrlReaction = (
 };
 
 const incrementUrlReaction = (
-  c: any,
+  db: DB,
   request: {
     urlId: number;
     reactionId: number;
   },
 ) => {
-  const db = drizzle(c.env.DB);
   const { urlId, reactionId } = request;
   return db
     .update(urlReactions)

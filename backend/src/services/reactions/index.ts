@@ -1,37 +1,42 @@
-import { z } from "zod";
-import { insertReactionSchema, reactions } from "../../schema";
-import { drizzle } from "drizzle-orm/d1";
+import { reactions } from "../../schema";
+import { DrizzleD1Database } from "drizzle-orm/d1";
 import { eq } from "drizzle-orm";
+import { SQLiteTransaction } from "drizzle-orm/sqlite-core";
 
-const selectReactions = async (c: any) => {
-  const db = drizzle(c.env.DB);
-  const result = await db.select().from(reactions).all();
-  return c.json(result);
+type DB = DrizzleD1Database | SQLiteTransaction<any, any, any, any>;
+
+const selectReactions = async (db: DB) => {
+  return db.select().from(reactions).all();
 };
 
-const insertReaction = (
-  c: any,
-  request: Pick<z.infer<typeof insertReactionSchema>, "type">,
-) => {
-  const db = drizzle(c.env.DB);
-  const { type } = request;
+const findReaction = async (db: DB, reaction: string) => {
+  return db
+    .select()
+    .from(reactions)
+    .where(eq(reactions.type, reaction))
+    .limit(1)
+    .get();
+};
+
+const insertReaction = (db: DB, reaction: string) => {
   return db
     .insert(reactions)
     .values({
-      type,
+      type: reaction,
       createdAt: new Date(),
       updatedAt: new Date(),
     })
-    .execute();
+    .returning()
+    .get();
 };
 
-const deleteReaction = (c: any, id: number) => {
-  const db = drizzle(c.env.DB);
+const deleteReaction = (db: DB, id: number) => {
   return db.delete(reactions).where(eq(reactions.id, id)).execute();
 };
 
 export const reactionsService = {
   selectReactions,
+  findReaction,
   insertReaction,
   deleteReaction,
 };
