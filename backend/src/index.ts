@@ -11,7 +11,11 @@ app.use("*", logger());
 app.use(
   "/api/*",
   cors({
-    origin: ["http://localhost:3000", "https://qiita-hackathon.pages.dev"],
+    origin: [
+      "http://localhost:3000",
+      "https://qiita-hackathon.pages.dev",
+      "https://qiita.com",
+    ],
   }),
 );
 
