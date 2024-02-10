@@ -1,7 +1,15 @@
-import { Hono } from 'hono'
+import { Hono } from "hono";
+import { showRoutes } from "hono/dev";
+import { logger } from "hono/logger";
+import { Bindings } from "./binding";
+import { reactionsRoute } from "./reactions";
 
-const app = new Hono()
+const app = new Hono<{ Bindings: Bindings }>();
 
-app.get('/', (c) => c.text('Hello Hono!'))
+app.use("*", logger());
 
-export default app
+app.route("/api/reactions", reactionsRoute);
+
+export default app;
+
+showRoutes(app);
