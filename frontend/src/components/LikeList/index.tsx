@@ -11,7 +11,6 @@ export const LikeList=() =>{
     });
   }, []);
 
-
   return (
     <ul className="grid grid-cols-1 gap-4 w-full">
       {likes.map(like => <LikeItem key={like.url} {...like} />)}
