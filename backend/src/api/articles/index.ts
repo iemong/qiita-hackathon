@@ -17,17 +17,19 @@ articlesRoute.get("/", async (c) => {
   const urls = await urlsService.selectUrls(db, urlIds);
   const reactions = await reactionsService.selectReactions(db, reactionIds);
 
-  const result = articles.map((article) => {
-    const url = urls.find((url) => url.id === article.urlId);
-    const reaction = reactions.find(
-      (reaction) => reaction.id === article.reactionId,
-    );
-    return {
-      url: url?.url,
-      reaction: reaction?.type,
-      count: article.count,
-    };
-  });
+  const result = articles
+    .map((article) => {
+      const url = urls.find((url) => url.id === article.urlId);
+      const reaction = reactions.find(
+        (reaction) => reaction.id === article.reactionId,
+      );
+      return {
+        url: url?.url,
+        reaction: reaction?.type,
+        count: article.count,
+      };
+    })
+    .toSorted((a, b) => b.count - a.count);
   return c.json({ data: result });
 });
 
