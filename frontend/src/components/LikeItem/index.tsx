@@ -13,7 +13,8 @@ type Props = Like
 export const LikeItem = ({url, count, title, imageUrl}:Props)=> {
 
   const handleimgerror = (e:SyntheticEvent<HTMLImageElement>) => {
-    e.currentTarget.src = `/default.png`
+    const isQiita = url.includes('qiita')
+    e.currentTarget.src = `/default${isQiita ? '-qiita':''}.png`
   }
 
   if(!imageUrl && !title) return
