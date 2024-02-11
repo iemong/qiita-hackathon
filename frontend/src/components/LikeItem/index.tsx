@@ -19,7 +19,7 @@ export const LikeItem = ({url, count, title, imageUrl}:Props)=> {
   if(!imageUrl && !title) return
 
   return (
-    <li className="grid grid-cols-[1fr_200px] break-all whitespace-pre-wrap gap-2">
+    <li className="grid md:grid-cols-[1fr_200px] break-all whitespace-pre-wrap gap-1 md:gap-2">
       <a href={url} target='_blank' className="flex items-center cursor-pointer auto-cols-fr backdrop-blur-2xl rounded-xl border bg-gray-100 hover:bg-gray-300 overflow-hidden">
         <img className="h-[100px]" src={imageUrl}  alt={title} onError={handleimgerror}/>
         <span className='p-3'>{title}</span>
