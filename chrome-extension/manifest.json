@@ -1,0 +1,28 @@
+{
+  "manifest_version": 3,
+  "name": "Qiita Article Enhancer",
+  "version": "1.0",
+  "description": "Enhance Qiita articles by displaying data from a custom API.",
+  "permissions": [
+    "activeTab"
+  ],
+  "host_permissions": [
+    "https://backend.iemong.workers.dev/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["*://qiita.com/*/items/*"],
+      "js": ["contentScript.js"]
+    }
+  ],
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "web_accessible_resources": [{
+    "resources": ["images/icon.png"],
+    "matches": ["<all_urls>"]
+  }]
+}
